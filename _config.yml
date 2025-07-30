@@ -1,4 +1,9 @@
-title: "Jekyll on Ubuntu"
+title: "Math Notes"
 markdown: kramdown
 theme: minima
-repository: dummy-owner/dummy-repo # Remove if you have a repo
+
+kramdown:
+  input: GFM                # GitHub-style Markdown
+  math_engine: mathjax      # use MathJax
+  math_engine_opts:
+    preview: true           # preview math
