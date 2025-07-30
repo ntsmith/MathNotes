@@ -1,0 +1,4 @@
+title: "Jekyll on Ubuntu"
+markdown: kramdown
+theme: minima
+repository: dummy-owner/dummy-repo # Remove if you have a repo
