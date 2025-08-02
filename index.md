@@ -4,5 +4,4 @@ title: Home
 ---
 
 # Welcome
-
-- [Example Note](notes/example)
+- [All Notes](Notes)

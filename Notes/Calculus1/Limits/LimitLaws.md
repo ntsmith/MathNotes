@@ -3,7 +3,7 @@ layout: default
 title: Limit Laws
 ---
 
-# Limit Laws
+# {{ page.title }}
 Singe dollar: $x=\frac 1 2$
 
 Double dollar: $$y^2$$

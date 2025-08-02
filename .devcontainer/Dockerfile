@@ -9,7 +9,7 @@ RUN apt-get update \
    build-essential \
    zlib1g-dev \
  && rm -rf /var/lib/apt/lists/* \
- && gem install bundler
+ && gem install bundler --no-document
 
 
 # Create a user for VS Code
