@@ -1,7 +1,5 @@
 ---
+title: Course Notes
 layout: default
-title: Home
 ---
-
-# Welcome
-- [All Notes](Notes)
+[Course Notes]({{ site.url }}/Notes)

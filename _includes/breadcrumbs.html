@@ -1,14 +1,16 @@
-{% assign parts = page.url | split: '/' | reject: '' %}
-{% assign acc = "" %}
-<nav class="breadcrumbs">
-  <a href="{{ site.baseurl }}/">Home</a>
-  {% for part in parts %}
-    {% assign acc = acc | append: '/' | append: part %}
-    &nbsp;›&nbsp;
-    {% if forloop.last %}
-      <span>{{ part }}</span>
-    {% else %}
-      <a href="{{ site.baseurl }}{{ acc }}/">{{ part }}</a>
-    {% endif %}
+{% if include.ancestors %}
+  {% for anc in include.ancestors %}
   {% endfor %}
-</nav>
+  <nav class="breadcrumbs">
+    <a href="{{ site.url }}">Home</a>
+    {% for anc in include.ancestors %}
+      {% assign label = anc.title %}
+      {% assign url = anc.url | remove: "index.html" | remove: ".html" | split: "/" | where_exp: 'p', 'p != ""' | join: '/' %}
+      {% if forloop.last %}
+        &nbsp;›&nbsp;&nbsp;<span>{{ label }}</span>
+      {% else %}
+        &nbsp;›&nbsp;&nbsp;<a href="{{ site.url }}/{{ url }}/">{{ label }}</a>
+      {% endif %}
+    {% endfor %}
+  </nav>
+{% endif %}

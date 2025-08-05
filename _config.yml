@@ -8,6 +8,7 @@ kramdown:
   math_engine_opts:
     preview: true           # preview math
   
-# collections:
-#   notes:
-#     output: true
+collections:
+  Notes:
+    output: true
+    sort_by: order

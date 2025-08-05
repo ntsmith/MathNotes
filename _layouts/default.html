@@ -1,21 +1,12 @@
 <!DOCTYPE html>
 <html lang="{{ page.lang | default: site.lang | default: "en" }}">
-
   {%- include head.html -%}
-
   <body>
-
     {%- include header.html -%}
-{% include breadcrumbs.html %}
-
-    <main class="page-content" aria-label="Content">
-      <div class="wrapper">
-        {{ content }}
-      </div>
-    </main>
-
-    {%- include footer.html -%}
-
+    <div class = "mywrapper space-above">
+      <main class="page-content" aria-label="Content">
+          {{ content }}
+      </main>
+    </div>
   </body>
-
 </html>

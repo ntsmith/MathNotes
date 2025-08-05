@@ -1,49 +1,71 @@
 ---
 layout: default
 ---
-{% capture listing %}
-# {{ page.title }}
+{% assign page_url_parts = page.url | remove: 'index.html'  | remove: '.html' | split: '/' | where_exp: 'p', 'p != ""' %}
+{% assign page_url = page_url_parts | join: '/' %}
+{% assign parent_url_parts_len = page_url_parts | size | minus: 1 %}
+{% assign parent_url = page_url_parts | slice: 0, parent_url_parts_len | join: '/' %}
 
-{% if page.name == "index.md" %}
+{% assign ancestors = '' | split: '' %}
+{% for part in page_url_parts %}
+  {% assign idx = forloop.index0 | plus: 1 %}
+  {% assign cur_my_url = page_url_parts | slice: 0, idx | join: '/' %}
+  {% assign cur_url = '/' | append: cur_my_url | append: '/index.html' %}
+  {% assign cur_ancestor = site.Notes | where: "url", cur_url| first %}
+  {% assign ancestors = ancestors | push: cur_ancestor %}
+{% endfor %}
 
-  {% assign subdirs = site.pages | where: "name", "index.md" %}
-  {% assign subdirs_len = subdirs | size %}
+{% assign all_notes = site.Notes | sort: "order" %}
+{% assign siblings = '' | split: '' %}
+{% assign children = '' | split: '' %}
+{% for note in all_notes %}
+  {% assign idx = forloop.index0 %}
+  {% assign note_url_parts = note.url | remove: 'index.html' | remove: '.html' | split: '/' | where_exp: 'p', 'p != ""' %}
+  {% assign note_url = note_url_parts | join: '/' %}
+  {% assign note_parent_parts_len = note_url_parts | size | minus: 1 %}
+  {% assign note_parent_url = note_url_parts | slice: 0, note_parent_parts_len | join: '/' %}
 
-  {% assign prefix = page.dir %}
-  {% assign prefix_len = prefix | size %}
-
-  {% assign all_sub_dirs = "" | split: "," %}
-  {% for p in subdirs %}
-    {% assign d = p.dir %}
-    {% assign suffix_len = d | size | minus: prefix_len %}
-    {% assign d_prefix = d | slice: 0, prefix_len %}
-    {% assign d_suffix_len = d | slice: prefix_len, suffix_len | split: "/" | size %}
-    {% if d_prefix == prefix and d_suffix_len == 1 %}
-      {% assign d_page = site.pages | where: "url", d | first %}
-      {% assign all_sub_dirs = all_sub_dirs | push: d_page %}
-      {% assign all_sub_dirs_len = all_sub_dirs | size %}
+  {% comment %}If current page, get next and previous.{% endcomment %}
+  {% if note_url == page_url %}  
+    {% assign prev_idx = idx | minus: 1 %}
+    {% assign next_idx = idx | plus: 1 %}
+    {% if prev_idx >= 0 %}
+      {% assign prev = all_notes[prev_idx] %}
     {% endif %}
+    {% assign next = all_notes[next_idx] %}
+  {% endif %}
+
+  {% comment %}Check if page is a sibling{% endcomment %}
+  {% if note_parent_url == parent_url %}
+    {% assign siblings = siblings | push: note %}
+  {% endif %}
+  
+  {% comment %}If page is directory, check if note is child{% endcomment %}
+  {% if page.slug == 'index' %}
+    {% if note_parent_url == page_url %}
+      {% assign children = children | push: note %}
+    {% endif %}
+  {% endif %}
+{% endfor %}
+
+{%- include breadcrumbs.html ancestors=ancestors -%}
+{%- include sidebar.html ancestors=ancestors siblings=siblings -%}
+
+{% capture listing %}
+
+# {{ page.title }}
+{{ content }}
+
+{% assign children_len = children | size %}
+{% if children_len > 0 %}
+## Contents
+  {% for note in children %}
+    {% assign note_url = note.url | remove: 'index.html' | remove: '.html' | split: '/' | where_exp: 'p', 'p != ""' | join: '/' %}
+- [{{ note.title }}]({{ site.url }}/{{ note_url }})
   {% endfor %}
-
-  {% assign siblings = site.pages |where_exp: "p", "p.dir == page.dir" | where_exp: "p", "p.name != page.name" | where_exp: "p", "p.name != index_name" %}
-  {% assign siblings_len = siblings | size %}
-  {% if siblings_len > 0 %}
-## Sections
-    {% for p in siblings %}
-- [{{ p.title }}]({{ p.url }})
-    {% endfor %}
-  {% endif %}
-
-  {% if all_sub_dirs_len > 0 %}
-## SubModules
-    {% for d_page in all_sub_dirs %}
-- [{{ d_page.title }}]({{ d_page.url }})
-    {% endfor %}
-  {% endif %}
-
 {% endif %}
 
 {% endcapture %}
 {{ listing | markdownify }}
 
-{{ content }}
+{%- include pagination.html prev=prev next=next -%}
