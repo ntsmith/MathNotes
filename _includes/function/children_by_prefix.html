@@ -1,0 +1,28 @@
+{% comment %}
+Parameters:
+    prefix (required) e.g. "/Notes"
+    from   (optional) a collection/array to search (default: site.pages)
+Output:
+    filtered
+{% endcomment %}
+
+{% include function/clean_url.html url=include.prefix %}
+{% assign prefix_clean = output %}
+{% assign _prefix_len = prefix_clean | size %}
+<b>prefix_clean</b>{{ prefix_clean }}
+
+{% assign _pages = include.from | default: site.pages %}
+
+{% assign filtered = "" | split: "" %}
+{% for p in _pages %}
+  {% include function/clean_url.html url=p.url %}
+  {% assign p_url_clean = output %}
+
+  {% assign p_prefix = p_url_clean | slice: 0, _prefix_len %}
+  {% assign p_suffix_len = p_url_clean | size | minus: _prefix_len %}
+  {% assign p_suffix_nterms = p_url_clean | slice: _prefix_len, p_suffix_len | split: '/' | size | minus: 1 %}
+
+  {% if p_prefix == prefix_clean and p_suffix_nterms == 1 %}
+    {%- assign filtered = filtered | push: p %}
+  {% endif %}
+{% endfor %}

@@ -4,7 +4,17 @@ layout: default
 {% assign page_url_parts = page.url | remove: 'index.html'  | remove: '.html' | split: '/' | where_exp: 'p', 'p != ""' %}
 {% assign page_url = page_url_parts | join: '/' %}
 {% assign parent_url_parts_len = page_url_parts | size | minus: 1 %}
-{% assign parent_url = page_url_parts | slice: 0, parent_url_parts_len | join: '/' %}
+{% assign parent_url = page_url_parts | slice: 0, parent_url_parts_len | join: '/' | append: '/index.html' %}
+{% assign parent = site.Notes | where: 'url', parent_url %}
+{% if parent %}
+  {% if parent.children %}
+    {% assign sibling_names = parent.children %}
+    {% for name in sibling_names %}
+      
+    {% endfor %}
+  {% else %}
+  {% endif %}
+{% endif %}
 
 {% assign ancestors = '' | split: '' %}
 {% for part in page_url_parts %}
@@ -17,7 +27,6 @@ layout: default
 
 {% assign all_notes = site.Notes | sort: "order" %}
 {% assign siblings = '' | split: '' %}
-{% assign children = '' | split: '' %}
 {% for note in all_notes %}
   {% assign idx = forloop.index0 %}
   {% assign note_url_parts = note.url | remove: 'index.html' | remove: '.html' | split: '/' | where_exp: 'p', 'p != ""' %}
@@ -39,32 +48,14 @@ layout: default
   {% if note_parent_url == parent_url %}
     {% assign siblings = siblings | push: note %}
   {% endif %}
-  
-  {% comment %}If page is directory, check if note is child{% endcomment %}
-  {% if page.slug == 'index' %}
-    {% if note_parent_url == page_url %}
-      {% assign children = children | push: note %}
-    {% endif %}
-  {% endif %}
 {% endfor %}
 
 {%- include breadcrumbs.html -%}
 {%- include sidebar.html ancestors=ancestors siblings=siblings -%}
 
 {% capture listing %}
-
 # {{ page.title }}
 {{ content }}
-
-{% assign children_len = children | size %}
-{% if children_len > 0 %}
-## Contents
-  {% for note in children %}
-    {% assign note_url = note.url | remove: 'index.html' | remove: '.html' | split: '/' | where_exp: 'p', 'p != ""' | join: '/' %}
-- [{{ note.title }}]({{ site.url }}/{{ note_url }})
-  {% endfor %}
-{% endif %}
-
 {% endcapture %}
 {{ listing | markdownify }}
 

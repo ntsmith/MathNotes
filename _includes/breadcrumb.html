@@ -1,0 +1,30 @@
+{% if include.base_dir and include.path_parts %}
+  {% assign base_dir = include.base_dir %}
+  {% assign path_parts = include.path_parts %}
+  {% assign first_path = path_parts | first %}
+  {% assign last_path = path_parts | last %}
+  {% assign path_parts_len = path_parts | size %}
+  {% assign next_path_parts_len = path_parts_len | minus: 1 %}
+  {% assign next_path_parts = path_parts | slice: 1, next_path_parts_len %}
+  {% comment %}Case: Source Dir, Last Arg{% endcomment %}
+
+  {% if path_parts_len == 1 %}
+    {% comment %}Case: Last Arg{% endcomment %}
+    {% assign file_url = base_dir | append: '/' | append: first_path | append: '.html' %}
+    {% assign dir_url = base_dir | append:'/' | append: first_path | append: '/index.html' %}
+    {% assign file_item = site.Notes | where: 'url', file_url | first %}
+    {% assign dir_item = site.Notes | where: 'url', dir_url | first %}
+    {% if file_item %}
+      &nbsp; > &nbsp; {{ file_item.title }}
+    {% else %}
+      &nbsp; > &nbsp; {{ dir_item.title }}
+    {% endif %}
+  {% else %}
+    {% comment %}Case: Intermediate Arg{% endcomment %}
+    {% assign cur_url = base_dir | append: '/' | append: first_path | append: '/index.html' %}
+    {% assign item = site.Notes | where: 'url', cur_url | first %}
+    &nbsp; > &nbsp; <a href="{{ item.url }}">{{ item.title }}</a>
+    {% assign next_base_dir = base_dir | append: '/' | append: first_path %}
+    {% include breadcrumb.html base_dir=next_base_dir path_parts=next_path_parts %}
+  {% endif %}
+{% endif %} 

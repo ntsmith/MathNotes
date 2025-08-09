@@ -1,16 +1,5 @@
-{% if include.ancestors %}
-  {% for anc in include.ancestors %}
-  {% endfor %}
-  <nav class="breadcrumbs">
-    <a href="{{ site.url }}">Home</a>
-    {% for anc in include.ancestors %}
-      {% assign label = anc.title %}
-      {% assign url = anc.url | remove: "index.html" | remove: ".html" | split: "/" | where_exp: 'p', 'p != ""' | join: '/' %}
-      {% if forloop.last %}
-        &nbsp;›&nbsp;&nbsp;<span>{{ label }}</span>
-      {% else %}
-        &nbsp;›&nbsp;&nbsp;<a href="{{ site.url }}/{{ url }}/">{{ label }}</a>
-      {% endif %}
-    {% endfor %}
-  </nav>
-{% endif %}
+{% assign clean_url_parts = page.url | remove: 'index.html' | remove: '.html' | split: '/' | where_exp: 'p', 'p != ""' %}
+<nav class="breadcrumbs">
+  <a href="{{ site.url }}">Home</a>
+    {% include breadcrumb.html base_dir='' path_parts=clean_url_parts %}
+</nav>
