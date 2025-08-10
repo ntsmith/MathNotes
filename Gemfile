@@ -5,6 +5,7 @@ gem "jekyll", "~> 4.3"
 
 # Theme
 gem "minima", "~> 2.5"
+gem "jekyll-seo-tag", "~> 2.8"
 
 # Miscellaneous
 gem "jekyll-archives", "~> 2.2"
