@@ -9,6 +9,7 @@ layout: default
 {% assign ancestors = '' | split: '' %}
 {% for part in page_url_parts %}
   {% assign idx = forloop.index0 | plus: 1 %}
+
   {% assign cur_my_url = page_url_parts | slice: 0, idx | join: '/' %}
   {% assign cur_url = '/' | append: cur_my_url | append: '/index.html' %}
   {% assign cur_ancestor = site.Notes | where: "url", cur_url | first %}
@@ -29,7 +30,7 @@ layout: default
   {% if note_url == page_url %}  
     {% assign prev_idx = idx | minus: 1 %}
     {% assign next_idx = idx | plus: 1 %}
-    {% if prev_idx >= 0 %}
+    {% if idx | minus: 1 >= 0 %}
       {% assign prev = all_notes[prev_idx] %}
     {% endif %}
     {% assign next = all_notes[next_idx] %}
@@ -61,9 +62,16 @@ layout: default
 ## Contents
   {% for note in children %}
     {% assign note_url = note.url | remove: 'index.html' | remove: '.html' | split: '/' | where_exp: 'p', 'p != ""' | join: '/' %}
-- [{{ note.title }}]({{ site.url }}/{{ note_url }})
+- [{{ note.title }}]({{ site.baseurl }}/{{ note_url }})
   {% endfor %}
 {% endif %}
+
+**site.url** ({{ site.url }}) <br/>
+**site.baseurl** ({{ site.baseurl }}) <br/>
+**page.path** ({{ page.path }}) <br/>
+**page.relative_path** ({{ page.relative_path }}) <br/>
+**page.url** ({{ page.url }})<br/>
+**page.collection** ({{ page.collection }})<br/>
 
 {% endcapture %}
 {{ listing | markdownify }}

@@ -3,7 +3,7 @@ layout: default
 ---
 ## Pages by Prefix
 
-{% include function/ends_with.html string='asdf' suffix='df' %}
+{% include function/children_by_prefix.html prefix='/Notes/Math/' from=site.Notes %}
 {% if output %}
 <b>True</b><br/>
 {% else %}

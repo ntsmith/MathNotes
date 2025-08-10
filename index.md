@@ -2,4 +2,4 @@
 title: Course Notes
 layout: default
 ---
-[Course Notes]({{ site.url }}/Notes)
+[Course Notes]({{ site.url }}/{{ site.baseurl }}/Notes)

@@ -1,5 +1,5 @@
 {% assign clean_url_parts = page.url | remove: 'index.html' | remove: '.html' | split: '/' | where_exp: 'p', 'p != ""' %}
 <nav class="breadcrumbs">
-  <a href="{{ site.url }}">Home</a>
+  <a href="{{ site.baseurl }}/">Home</a>
     {% include breadcrumb.html base_dir='' path_parts=clean_url_parts %}
 </nav>

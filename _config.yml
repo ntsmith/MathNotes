@@ -7,8 +7,22 @@ kramdown:
   math_engine: mathjax      # use MathJax
   math_engine_opts:
     preview: true           # preview math
-  
+
+plugins:
+  - jekyll-archives  # Read about this
+  - jekyll-toc       # Read about this
+  - jekyll-seo-tag
+
+exclude:
+  - vendor
+  - node_modules
+  - .github
+  - .devcontainer
+  - Gemfile
+  - Gemfile.lock
+
+baseurl: "/MathNotes"
+
 collections:
   Notes:
     output: true
-    sort_by: order
