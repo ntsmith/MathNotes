@@ -1,7 +1,6 @@
 ---
 layout: folder
 title: Limit Laws
-order: "1_1_1_1"
 ---
 Singe dollar: $x=\frac 1 2$
 

@@ -1,10 +1,10 @@
 ---
 title: Calculus I
 layout: folder
-order: "1_1"
 children:
   - Limits
   - Derivatives
+toc_depth: 2
 ---
 
 Calculus is something.

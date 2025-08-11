@@ -1,0 +1,36 @@
+{% assign url = include.url | default: page.url %}
+{% assign depth = include.toc_depth | default: page.toc_depth | default: 1 %}
+{% if depth > 0 %}
+  {% assign child_depth = depth | minus: 1 %}
+  {% assign page_url_parts = url | split: '/' %}
+  {% assign dir_parts_len = page_url_parts | size | minus: 1 %}
+  {% assign dir_path = page_url_parts | slice: 0, dir_parts_len | join: '/' %}
+  {% assign dir_url = dir_path | append: '/index.html' %}
+  {% assign dir = site.Notes | where: 'url', dir_url | first %}
+  <ul class="toc">
+  {% for child_name in dir.children %}
+    {% comment %}The following assignments due to global vars{% endcomment %}
+    {% assign url = include.url | default: page.url %}
+    {% assign depth = include.toc_depth | default: page.toc_depth | default: 1 %}
+    {% assign child_depth = depth | minus: 1 %}
+    {% assign page_url_parts = url | split: '/' %}
+    {% assign dir_parts_len = page_url_parts | size | minus: 1 %}
+    {% assign dir_path = page_url_parts | slice: 0, dir_parts_len | join: '/' %}
+    {% assign dir_url = dir_path | append: '/index.html' %}
+    {% assign dir = site.Notes | where: 'url', dir_url | first %}
+
+    {% assign last_five = child_name | slice: -5,5 %}
+    {% if last_five == '.html' %}
+      {% assign child_url = dir_path | append: '/' | append: child_name %}
+      {% assign child = site.Notes | where: 'url', child_url | first %}
+      <li><a href="{{ site.baseurl }}{{ child.url }}">{{ child.title }}</a></li>
+    {% else %}
+      {% assign child_url = dir_path | append: '/' | append: child_name | append: '/index.html' %}
+      {% assign child = site.Notes | where: 'url', child_url | first %}
+      {% assign static = site.Notes | where: 'url', '/Notes/Math/Calculus1/Derivatives/index.html' | first %}
+      <li><a href="{{ site.baseurl }}{{ child.url }}">{{ child.title }}</a></li>
+    {% endif %}
+    {% include toc.html url=child.url toc_depth=child_depth %}
+  {% endfor %}
+  </ul>
+{% endif %}

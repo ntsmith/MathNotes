@@ -2,6 +2,7 @@ source "https://rubygems.org"
 
 # Core
 gem "jekyll", "~> 4.3"
+gem "liquid", ">= 4.0.0"
 
 # Theme
 gem "minima", "~> 2.5"
