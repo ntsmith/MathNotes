@@ -1,6 +1,60 @@
-{% assign baseurl = include.baseurl | default: '' %}
-{% assign path = include.path | default: page.url %}
-<nav class="breadcrumbs" >
-  <a href="{{ site.baseurl }}/">Home</a>
-  {% include parts/breadcrumb.html baseurl=baseurl path=path %}
-</nav>
+{% assign parts = page.url | split: '/' | where_exp: 'p', 'p != ""' %}
+{% assign baseurl = '/' | append: parts[0] %}
+{% assign parts_len = parts | size | minus: 1 %}
+{% assign parts = parts | slice: 1, parts_len %}
+<ul class="breadcrumbs">
+<li><a href="{{ site.baseurl }}/index.html">Home</a></li>
+
+{% if parts.size == 1 and parts[0] == 'index.html' %}   {% comment %}CASE 1{% endcomment %}
+  {% assign cur_url =  baseurl | append: '/index.html' %}
+  {% assign cur_note = site.Notes | where: 'url', cur_url | first %}
+  <li>{{ cur_note.title }}</li>
+
+{% else %}                                              {% comment %}CASE 2,3,4{% endcomment %}
+  {% assign cur_url =  baseurl | append: '/index.html' %}
+  {% assign cur_note = site.Notes | where: 'url', cur_url | first %}
+  <li><a href="{{ site.baseurl }}{{ cur_url }}">{{ cur_note.title }}</a></li>
+
+  {% if parts.size == 1 and parts[0] != 'index.html' %} {% comment %}CASE 2{% endcomment %}
+    {% assign cur_url = baseurl | append: '/' | append: parts[0] %}
+    {% assign cur_note = site.Notes | where: 'url', cur_url | last %}
+    <li>{{ cur_note.title }}</li> 
+
+  {% elsif parts.size == 2 and parts[-1] == 'index.html' %} {% comment %}CASE 3{% endcomment %}
+    {% assign cur_url = baseurl | append: '/' | append: parts[0] | append: '/index.html' %}
+    {% assign cur_note = site.Notes | where: 'url', cur_url | last %}
+    <li>{{ cur_note.title }}</li>
+
+  {% else %}                                                {% comment %}CASE 4{% endcomment %}
+    {% assign parts_remaining = parts %}
+    {% for part in parts %}
+      {% if parts_remaining.size == 1 %}           
+
+        {% if parts_remaining[0] != 'index.html' %}                                 {% comment %}CASE 4A - page - final iteration{% endcomment %}
+          {% assign cur_url = baseurl | append: '/' | append: parts_remaining[0] %}
+          {% assign cur_note = site.Notes | where: 'url', cur_url | last %}
+          <li>{{ cur_note.title }}</li>
+        {% endif %}
+        
+      {% elsif parts_remaining.size == 2 and parts_remaining[1] == 'index.html' %}  {% comment %}CASE 4B - directory - final iteration{% endcomment %}
+        {% assign cur_url = baseurl | append: '/' | append: parts_remaining[0] | append: '/' | append: parts_remaining[1] %}
+        {% assign cur_note = site.Notes | where: 'url', cur_url | last %}
+        <li>{{ cur_note.title }}</li>
+        {% assign baseurl = baseurl | append: '/' | append: part %}
+        {% assign next_size = parts_remaining | size | minus: 1 %}
+        {% assign parts_remaining = parts_remaining | slice: 1, next_size %}
+
+      {% elsif parts_remaining.size >= 2 %}                                         {% comment %}CASE 4 - intermediate iteration{% endcomment %}
+        {% assign cur_url = baseurl | append: '/' | append: part | append: '/index.html' %}
+        {% assign cur_note = site.Notes | where: 'url', cur_url | last %}
+        <li><a href='{{ site.baseurl }}{{ cur_url }}'>{{ cur_note.title }}</a></li>
+        {% assign baseurl = baseurl | append: '/' | append: part %}
+        {% assign next_size = parts_remaining | size | minus: 1 %}
+        {% assign parts_remaining = parts_remaining | slice: 1, next_size %}
+
+      {% endif %}
+
+    {% endfor %}
+  {% endif %}
+{% endif %}
+</ul>
