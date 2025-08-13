@@ -2,8 +2,8 @@
 title: Calculus I
 layout: folder
 children:
-  - Limits
-  - Derivatives
+  - Limits/index.html
+  - Derivatives/index.html
 toc_depth: 2
 ---
 

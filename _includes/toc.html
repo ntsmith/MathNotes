@@ -1,36 +1,70 @@
-{% assign url = include.url | default: page.url %}
-{% assign depth = include.toc_depth | default: page.toc_depth | default: 1 %}
-{% if depth > 0 %}
-  {% assign child_depth = depth | minus: 1 %}
-  {% assign page_url_parts = url | split: '/' %}
-  {% assign dir_parts_len = page_url_parts | size | minus: 1 %}
-  {% assign dir_path = page_url_parts | slice: 0, dir_parts_len | join: '/' %}
-  {% assign dir_url = dir_path | append: '/index.html' %}
-  {% assign dir = site.Notes | where: 'url', dir_url | first %}
-  <ul class="toc">
-  {% for child_name in dir.children %}
-    {% comment %}The following assignments due to global vars{% endcomment %}
-    {% assign url = include.url | default: page.url %}
-    {% assign depth = include.toc_depth | default: page.toc_depth | default: 1 %}
-    {% assign child_depth = depth | minus: 1 %}
-    {% assign page_url_parts = url | split: '/' %}
-    {% assign dir_parts_len = page_url_parts | size | minus: 1 %}
-    {% assign dir_path = page_url_parts | slice: 0, dir_parts_len | join: '/' %}
-    {% assign dir_url = dir_path | append: '/index.html' %}
-    {% assign dir = site.Notes | where: 'url', dir_url | first %}
+{%- assign initial_url = include.url | default: page.url %}
 
-    {% assign last_five = child_name | slice: -5,5 %}
-    {% if last_five == '.html' %}
-      {% assign child_url = dir_path | append: '/' | append: child_name %}
-      {% assign child = site.Notes | where: 'url', child_url | first %}
-      <li><a href="{{ site.baseurl }}{{ child.url }}">{{ child.title }}</a></li>
-    {% else %}
-      {% assign child_url = dir_path | append: '/' | append: child_name | append: '/index.html' %}
-      {% assign child = site.Notes | where: 'url', child_url | first %}
-      {% assign static = site.Notes | where: 'url', '/Notes/Math/Calculus1/Derivatives/index.html' | first %}
-      <li><a href="{{ site.baseurl }}{{ child.url }}">{{ child.title }}</a></li>
-    {% endif %}
-    {% include toc.html url=child.url toc_depth=child_depth %}
-  {% endfor %}
-  </ul>
-{% endif %}
+{%- assign url_stack = '' | split: ',' %}
+{%- assign depth_stack = '' | split: ',' %}
+
+{%- assign note = site.Notes | where: 'url', initial_url | first %}
+{%- assign depth = include.toc_depth | default: page.toc_depth | default: 1 %}
+{%- assign last_depth = depth %}
+
+{%- assign child_depth = depth | minus: 1 %}
+{%- assign note_parts = note.url | split: '/' %}
+{%- assign dir_parts_len = note_parts | size | minus: 1 %}
+{%- assign dir_parts = note_parts | slice: 0, dir_parts_len %}
+{%- for child_path in note.children %}
+{%- assign child_parts = child_path | split: '/' %}
+{%- assign child_parts = dir_parts | concat: child_parts %}
+{%- assign child_url = child_parts | join: '/' %}
+
+{%- assign child_array = child_url | split: '||' %}
+{%- assign url_stack = child_array | concat: url_stack %}
+{%- assign depth_stack = (child_depth..child_depth) | concat: depth_stack %}
+    {%- endfor %}
+{%- for i in (1..99) %}
+
+  {%- comment %} If the list is empty, then stop {%- endcomment %}
+  {%- if url_stack.size == 0 %}
+    {%- break %}
+  {%- endif %}
+
+  {%- comment %} Grab next note from stack, Reset list {%- endcomment %}
+  {%- assign cur_url = url_stack | first %}
+  {%-  assign note = site.Notes | where: 'url', cur_url | first %}
+  {%- assign depth = depth_stack | first %}
+  {%- assign next_stack_len = url_stack | size | minus: 1 %}
+  {%- assign url_stack = url_stack | slice: 1, next_stack_len %}
+  {%- assign depth_stack = depth_stack | slice: 1, next_stack_len %}
+
+  {%- comment %} Open/Close ul-tags, Reset depth {%- endcomment %}
+  {%- assign depth_delta = depth | minus: last_depth %}
+  {%- assign abs_depth_delta = depth_delta | abs %}
+  {%- if depth_delta > 0 %}
+    {%- for j in (1..depth_delta) %}</ul>{%- endfor %}
+  {%- elsif depth_delta < 0 %}
+    {%- for j in (1..abs_depth_delta) %}<ul class="toc">{%- endfor %}
+  {%- endif %}
+
+  {%- comment %} Display note {%- endcomment %}
+  <li><a href="{{ site.baseurl }}{{ note.url }}">{{ note.title }}</a></li>
+
+  {%- comment %} Add children. Also ToDo handle with or without index/.html{%- endcomment %}
+  {%- if depth > 0 %}
+    {%- assign child_depth = depth | minus: 1 %}
+    {%- assign note_parts = note.url | split: '/' %}
+    {%- assign dir_parts_len = note_parts | size | minus: 1 %}
+    {%- assign dir_parts = note_parts | slice: 0, dir_parts_len %}
+
+    {%- for child_path in note.children %}
+      {%- assign child_parts = child_path | split: '/' %}
+      {%- assign child_parts = dir_parts | concat: child_parts %}
+      {%- assign child_url = child_parts | join: '/' %}
+      {%- assign child_array = child_url | split: '||' %}
+      {%- assign url_stack = child_array | concat: url_stack %}
+      {%- assign depth_stack = (child_depth..child_depth) | concat: depth_stack %}
+    {%- endfor %}
+  {%- endif %}
+  {%- assign last_depth = depth %}
+{%- endfor %}
+
+{%- assign abs_depth_delta = inital_depth | minus: last_depth | abs %}
+{%- for j in (1..abs_depth_delta) %}</ul>{%- endfor %}

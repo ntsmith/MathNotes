@@ -1,11 +1,11 @@
 ---
 layout: default
 ---
-{%- include breadcrumbs.html -%}
+{%- include breadcrumbs.html %}
 
-{% capture listing %}
+{%- capture listing %}
 # {{ page.title }}
 {{ content }}
-{% endcapture %}
+{%- endcapture %}
 {{ listing | markdownify }}
 {% include toc.html %}

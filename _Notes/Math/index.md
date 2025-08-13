@@ -2,5 +2,5 @@
 title: Math
 layout: folder
 children:
-  - Calculus1
+  - Calculus1/index.html
 ---
