@@ -1,5 +1,5 @@
 ---
 title: VSCode
-layout: folder
+layout: note
 ---
 I forgot

@@ -1,12 +1,10 @@
 <!DOCTYPE html>
-<html lang="{{ page.lang | default: site.lang | default: "en" }}">
-{% include head.html %}
+<html lang="en">
+  {% include head.html %}
   <body>
-{% include header.html %}
-    <div class = "mywrapper space-above">
-      <main class="page-content" aria-label="Content">
-          {{ content }}
-      </main>
-    </div>
+    {% include header.html %}
+    <main class="mywrapper" aria-label="Content">
+      {{ content }}
+    </main>
   </body>
 </html>

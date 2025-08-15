@@ -1,0 +1,8 @@
+---
+layout: default
+---
+<h1>Notes</h1>
+{%- include breadcrumbs.html %}
+<h2>Contents</h2>
+{%- capture listing %}{{ content }}{%- endcapture %}{{ listing | markdownify }}
+{% include toc.html %}

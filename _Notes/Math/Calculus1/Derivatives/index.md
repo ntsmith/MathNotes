@@ -1,4 +1,4 @@
 ---
 title: Derivatives
-layout: folder
+layout: note
 ---

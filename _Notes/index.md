@@ -1,8 +1,8 @@
 ---
 title: Notes
-layout: folder
+layout: note
 children:
   - Math/index.html
-  - Programming/index.html
+  - Computers/index.html
   - OneThing.html
 ---

@@ -1,6 +1,5 @@
 title: "Math Notes"
 markdown: kramdown
-theme: minima
 
 kramdown:
   input: GFM                # GitHub-style Markdown
@@ -8,12 +7,8 @@ kramdown:
   math_engine_opts:
     preview: true           # preview math
 
-plugins:
-  - jekyll-archives  # Read about this
-  - jekyll-toc       # Read about this
-  - jekyll-seo-tag
-
 exclude:
+  - .bundle
   - vendor
   - node_modules
   - .github

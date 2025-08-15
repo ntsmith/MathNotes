@@ -2,15 +2,7 @@ source "https://rubygems.org"
 
 # Core
 gem "jekyll", "~> 4.3"
-gem "liquid", ">= 4.0.0"
-
-# Theme
-gem "minima", "~> 2.5"
-gem "jekyll-seo-tag", "~> 2.8"
-
-# Miscellaneous
-gem "jekyll-archives", "~> 2.2"
-gem "jekyll-toc", "~> 0.19"
+gem "webrick", "~> 1.8"
 
 # Markdown
 gem "kramdown-parser-gfm", "~> 1.1"

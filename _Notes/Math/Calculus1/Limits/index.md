@@ -1,6 +1,6 @@
 ---
 title: Limits
-layout: folder
+layout: note
 children:
   - LimitLaws.html
   - Theorem1.html

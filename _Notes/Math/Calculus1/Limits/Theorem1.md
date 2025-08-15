@@ -1,5 +1,5 @@
 ---
 title: Theorem 1
-layout: folder
+layout: note
 ---
 Theorem 1 is important

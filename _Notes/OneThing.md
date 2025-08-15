@@ -1,5 +1,5 @@
 ---
 title: One Thing
-layout: folder
+layout: note
 ---
 That is all

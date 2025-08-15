@@ -1,6 +1,6 @@
 ---
 title: Calculus I
-layout: folder
+layout: note
 children:
   - Limits/index.html
   - Derivatives/index.html

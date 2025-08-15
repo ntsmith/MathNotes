@@ -1,5 +1,5 @@
 ---
-layout: folder
+layout: note
 title: Limit Laws
 ---
 Singe dollar: $x=\frac 1 2$
